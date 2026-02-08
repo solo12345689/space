@@ -33,9 +33,29 @@ body {
 <body>
 
 <div id="gameContainer"></div>
-<div id="loading">Loading game… please wait</div>
+<div id="loading">Starting game…</div>
 
-<!-- UNITY LOADER -->
+<script>
+/* ===== CRAZYGAMES ENVIRONMENT STUB ===== */
+window.Crazygames = {
+  SDK: {
+    init: () => Promise.resolve(),
+    game: {
+      sdkGameLoadingStart: ()=>{},
+      sdkGameLoadingStop: ()=>{}
+    },
+    ad: {
+      requestAd: ()=>Promise.resolve()
+    }
+  }
+};
+
+/* ===== WEBGL CONTEXT FIX ===== */
+HTMLCanvasElement.prototype.getContextSafariWebGL2Fixed =
+    HTMLCanvasElement.prototype.getContext;
+</script>
+
+<!-- REAL UNITY LOADER -->
 <script src="81bbae32c7a77bc49304934b19e72883.loader.js"></script>
 
 <script>
@@ -44,7 +64,7 @@ var config = {
     frameworkUrl: "f3dc87e8bc321dd382fbd3fa53e1091f.framework.js.br",
     codeUrl: "9adf8a1aafea4c2333e26d66a8b36d56.wasm.br",
     streamingAssetsUrl: "StreamingAssets",
-    companyName: "Local",
+    companyName: "Offline",
     productName: "Space Waves",
     productVersion: "1.0"
 };
