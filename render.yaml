@@ -1,0 +1,22 @@
+staticPublishPath: .
+
+headers:
+  # JavaScript
+  - path: /*.js
+    name: Content-Type
+    value: application/javascript
+
+  # Brotli compression
+  - path: /*.br
+    name: Content-Encoding
+    value: br
+
+  # Unity wasm
+  - path: /*.wasm.br
+    name: Content-Type
+    value: application/wasm
+
+  # Data files
+  - path: /*.data.br
+    name: Content-Type
+    value: application/octet-stream
