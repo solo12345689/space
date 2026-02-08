@@ -20,42 +20,38 @@ body {
   height:600px;
   background:#000;
 }
-
-#loading {
-  position:absolute;
-  color:white;
-  opacity:0.7;
-  margin-top:620px;
-}
 </style>
+
+<script>
+/* ===== ULTRA EARLY WEBGL PATCH ===== */
+
+(function() {
+  const orig = HTMLCanvasElement.prototype.getContext;
+
+  HTMLCanvasElement.prototype.getContext = function(type, attrs) {
+
+    // Unity calls fake function name
+    if (type === "webgl2" || type === "webgl") {
+      return orig.call(this, type, attrs);
+    }
+
+    return orig.apply(this, arguments);
+  };
+
+  // Fake function Unity expects
+  HTMLCanvasElement.prototype.getContextSafariWebGL2Fixed = function() {
+    return orig.apply(this, arguments);
+  };
+})();
+</script>
+
 </head>
 
 <body>
 
 <div id="gameContainer"></div>
-<div id="loading">Starting game…</div>
 
-<script>
-/* ===== CRAZYGAMES ENVIRONMENT STUB ===== */
-window.Crazygames = {
-  SDK: {
-    init: () => Promise.resolve(),
-    game: {
-      sdkGameLoadingStart: ()=>{},
-      sdkGameLoadingStop: ()=>{}
-    },
-    ad: {
-      requestAd: ()=>Promise.resolve()
-    }
-  }
-};
-
-/* ===== WEBGL CONTEXT FIX ===== */
-HTMLCanvasElement.prototype.getContextSafariWebGL2Fixed =
-    HTMLCanvasElement.prototype.getContext;
-</script>
-
-<!-- REAL UNITY LOADER -->
+<!-- 1. LOADER -->
 <script src="81bbae32c7a77bc49304934b19e72883.loader.js"></script>
 
 <script>
@@ -63,22 +59,12 @@ var config = {
     dataUrl: "e4aa851098e3e5d328e4d879078ad6c5.data.br",
     frameworkUrl: "f3dc87e8bc321dd382fbd3fa53e1091f.framework.js.br",
     codeUrl: "9adf8a1aafea4c2333e26d66a8b36d56.wasm.br",
-    streamingAssetsUrl: "StreamingAssets",
-    companyName: "Offline",
-    productName: "Space Waves",
-    productVersion: "1.0"
 };
 
 createUnityInstance(
-    document.querySelector("#gameContainer"),
-    config,
-    function(progress) {
-        document.getElementById("loading").innerText =
-            "Loading: " + Math.round(progress * 100) + "%";
-    }
-).then(function(){
-    document.getElementById("loading").style.display = "none";
-});
+  document.querySelector("#gameContainer"),
+  config
+);
 </script>
 
 </body>
